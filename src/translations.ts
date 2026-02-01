@@ -1,137 +1,28 @@
 export const translations = {
   th: {
-    // หน้าแรก (Landing)
-    landing_title: "KEE",
-    landing_subtitle: "SNAP, ANALYZE & REACH YOUR FITNESS GOALS.",
+    title: "KEECAL",
+    subtitle: "SNAP, ANALYZE & REACH YOUR FITNESS GOALS.",
+    start_btn: "เริ่มเลย",
     landing_btn: "เริ่มใช้งาน",
-    
-    // หน้าตั้งค่าโปรไฟล์
-    setup_profile: "ตั้งค่าโปรไฟล์",
-    upload_profile: "อัปโหลดรูปโปรไฟล์",
-    name: "ชื่อ",
+    setup_title: "ตั้งค่าโปรไฟล์",
     gender: "เพศ",
-    male: "ชาย",
-    female: "หญิง",
     age: "อายุ",
     weight: "น้ำหนัก (กก.)",
     height: "ส่วนสูง (ซม.)",
-    body_weight: "น้ำหนักตัว",
-    activity: "ระดับการทำกิจกรรม",
+    activity_level: "ระดับการทำกิจกรรม",
     goal: "เป้าหมาย",
-    continue: "ถัดไป",
-    
-    // ตัวเลือกกิจกรรม
-    sedentary: "ไม่ออกกำลังกาย",
-    light: "ออกกำลังกายเบาเบา",
-    moderate: "ออกกำลังกายปานกลาง",
-    active: "ออกกำลังกายหนัก",
-    extra_active: "นักกีฬา/งานใช้แรงงาน",
-    
-    // ตัวเลือกเป้าหมาย
-    lose: "ลดน้ำหนัก",
-    maintain: "รักษาน้ำหนัก",
-    gain: "เพิ่มน้ำหนัก",
-
-    // หน้าเลือกเทรนเนอร์
-    choose_coach: "เลือกเทรนเนอร์",
-    coach_name: "ชื่อเทรนเนอร์",
-    personality: "บุคลิกภาพ",
-    kind: "ใจดี อ่อนโยน",
-    aggressive: "ดุดัน เจ้าระเบียบ",
-    funny: "ตลก เฮฮา",
-    start_training: "เริ่มการเทรน",
-    your_coach: "เทรนเนอร์ของคุณ",
-
-    // หน้าหลัก (Home)
-    daily_intake: "การกินวันนี้",
-    snap_food: "ถ่ายรูปอาหาร",
-    gallery: "แกลเลอรี่",
-    today_logs: "บันทึกวันนี้",
-    no_activity: "ยังไม่มีประวัติการกิน",
-    coaching_progress: "กำลังวิเคราะห์อาหารโดย {trainer}...",
-    
-    // ข้อความตอนโหลด (Loading)
-    loading_kind: "รอแป๊บนึงนะ {name} เดี๋ยว {trainer} ดูให้ว่าจานนี้กี่แคล...",
-    loading_aggressive: "{name}! หยุดกินก่อน! {trainer} กำลังเช็กว่ามันอ้วนไหม!",
-    loading_funny: "จานนี้ดูดีนะเนี่ย {name} ขอ {trainer} ส่องแวบหนึ่งนะ...",
-
-    // หน้าประวัติ (History)
-    activity_history: "ประวัติการกินย้อนหลัง",
-    daily_total: "รวมวันนี้",
-    no_logs: "ไม่พบประวัติ",
-    logs: "ประวัติ",
-    stats: "หน้าหลัก",
-    user: "โปรไฟล์",
-
-    // หน้าโปรไฟล์ & ตั้งค่า
-    settings: "การตั้งค่า",
-    reset_data: "ล้างข้อมูลทั้งหมด",
-    reset_confirm_1: "แน่ใจใช่ไหม?",
-    reset_confirm_2: "ข้อมูลทั้งหมดรวมถึงประวัติจะหายไปถาวรนะแม่",
-    back: "ย้อนกลับ",
-
-    // หน้าวิเคราะห์ผล (Result)
-    nutrition_analysis: "วิเคราะห์สารอาหาร",
-    protein_short: "โปรตีน",
-    carbs_short: "คาร์บ",
-    fat_short: "ไขมัน"
-  },
-  en: {
-    landing_title: "KEE",
-    landing_subtitle: "SNAP, ANALYZE & REACH YOUR FITNESS GOALS.",
-    landing_btn: "GET STARTED",
-    setup_profile: "Setup Profile",
-    upload_profile: "Upload Photo",
-    name: "Name",
-    gender: "Gender",
-    male: "Male",
-    female: "Female",
-    age: "Age",
-    weight: "Weight (kg)",
-    height: "Height (cm)",
-    body_weight: "Body Weight",
-    activity: "Activity Level",
-    goal: "Goal",
-    continue: "CONTINUE",
-    sedentary: "Sedentary",
-    light: "Lightly Active",
-    moderate: "Moderately Active",
-    active: "Very Active",
-    extra_active: "Athlete/Manual Labor",
-    lose: "Lose Weight",
-    maintain: "Maintain Weight",
-    gain: "Gain Weight",
-    choose_coach: "Choose Coach",
-    coach_name: "Coach Name",
-    personality: "Personality",
-    kind: "Kind & Gentle",
-    aggressive: "Aggressive & Strict",
-    funny: "Funny & Humorous",
-    start_training: "START TRAINING",
-    your_coach: "Your Coach",
-    daily_intake: "Daily Intake",
-    snap_food: "SNAP FOOD",
-    gallery: "GALLERY",
-    today_logs: "Today's Logs",
-    no_activity: "No logs today",
-    coaching_progress: "Analyzing by {trainer}...",
-    loading_kind: "Wait a second {name}, {trainer} is checking...",
-    loading_aggressive: "{name}! Stop! {trainer} is checking calories!",
-    loading_funny: "Looks good {name}! Let {trainer} take a peek...",
-    activity_history: "History",
-    daily_total: "Daily Total",
-    no_logs: "No logs found",
-    logs: "LOGS",
-    stats: "HOME",
-    user: "PROFILE",
-    settings: "Settings",
-    reset_data: "RESET ALL DATA",
-    reset_confirm_1: "Are you sure?",
-    reset_confirm_2: "All data will be permanently deleted.",
-    back: "BACK",
-    nutrition_analysis: "Nutrition Analysis",
-    protein_short: "PROTEIN",
-    carbs_short: "CARBS",
-    fat_short: "FAT"
+    save_btn: "บันทึกข้อมูล",
+    activity_options: {
+      sedentary: "ไม่ออกกำลังกาย",
+      light: "ออกกำลังกายเบาเบา",
+      moderate: "ออกกำลังกายปานกลาง",
+      active: "ออกกำลังกายหนัก",
+      very_active: "นักกีฬา/งานใช้แรงงาน"
+    },
+    goal_options: {
+      lose: "ลดน้ำหนัก",
+      maintain: "รักษาน้ำหนัก",
+      gain: "เพิ่มน้ำหนัก"
+    }
   }
 };
