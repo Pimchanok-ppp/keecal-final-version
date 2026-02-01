@@ -2,18 +2,19 @@ import { GoogleGenerativeAI } from "@google/generative-ai";
 
 const genAI = new GoogleGenerativeAI(import.meta.env.VITE_GEMINI_API_KEY);
 
-export async function analyzeFoodImage(base64Image: string) {
+export async function analyzeFoodImage(imageBase64: string) {
   try {
     const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
-    const prompt = "วิเคราะห์ภาพอาหารนี้และตอบเป็น JSON: { 'name': 'ชื่ออาหาร', 'calories': 0, 'protein': 0, 'carbs': 0, 'fat': 0, 'comment': 'คำแนะนำ' }";
+    const prompt = "วิเคราะห์ภาพอาหารนี้และตอบเป็น JSON ภาษาไทยเท่านั้น: { \"name\": \"ชื่ออาหาร\", \"calories\": 0, \"nutrition\": { \"protein\": 0, \"carbs\": 0, \"fat\": 0 }, \"trainerComment\": \"คำแนะนำ\" }";
 
     const result = await model.generateContent([
       prompt,
-      { inlineData: { data: base64Image.split(",")[1], mimeType: "image/jpeg" } }
+      { inlineData: { data: imageBase64, mimeType: "image/jpeg" } }
     ]);
 
-    return (await result.response).text();
+    return result.response.text();
   } catch (error) {
-    throw error;
+    console.error(error);
+    throw new Error("AI Fail");
   }
 }
