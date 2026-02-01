@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect, useRef } from 'react';
 import { UserProfile, Trainer, FoodEntry, Personality, ActivityLevel, Goal, Gender, Language } from './types';
 import { analyzeFoodImage } from './services/geminiService';
@@ -171,36 +170,33 @@ export default function App() {
     localStorage.setItem('keecal_history', JSON.stringify(newHistory));
   };
 
- const handleImageUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
-  const file = e.target.files?.[0];
-  if (!file) return;
-
-  const reader = new FileReader();
-  reader.onload = async () => {
-    const base64 = reader.result as string;
-    try {
-      const aiData = await analyzeFoodImage(base64);
-      
- try {
-      const aiData = await analyzeFoodImage(base64);
-      
-      const newEntry: FoodEntry = {
-        id: Date.now().toString(),
-        name: aiData.name,
-        calories: aiData.calories,
-        nutrition: aiData.nutrition,
-        trainerComment: aiData.trainerComment,
-        timestamp: new Date().toISOString(),
-        image: base64
-      };
-      
-      setEntries(prev => [newEntry, ...prev]);
-    } catch (error) {
-      console.error(error);
-    }
+ const handleImageUpload = async (file: File) => {
+    setAnalyzing(true);
+    const reader = new FileReader();
+    reader.onload = async () => {
+      const base64 = reader.result as string;
+      try {
+        const aiData = await analyzeFoodImage(base64);
+        const newEntry: FoodEntry = {
+          id: Date.now().toString(),
+          name: aiData.name,
+          calories: aiData.calories,
+          nutrition: aiData.nutrition,
+          trainerComment: aiData.trainerComment,
+          timestamp: new Date().toISOString(),
+          image: base64
+        };
+        handleAddEntry(newEntry);
+        setShowResult(newEntry);
+      } catch (error) {
+        console.error(error);
+        alert("วิเคราะห์รูปไม่ได้จ้า เช็ค API Key หน่อยนะแม่");
+      } finally {
+        setAnalyzing(false);
+      }
+    };
+    reader.readAsDataURL(file);
   };
-  reader.readAsDataURL(file);
-};
 
   const handleTrainerImageFile = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
