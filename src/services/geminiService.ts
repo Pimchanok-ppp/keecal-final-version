@@ -1,37 +1,30 @@
 import { GoogleGenerativeAI } from "@google/generative-ai";
 
-// เราจะดึง API Key จาก Environment Variable ที่ตั้งไว้ใน Vercel
+// เรียกกุญแจให้ถูกชื่อตามที่ตั้งใน Vercel
 const genAI = new GoogleGenerativeAI(import.meta.env.VITE_GEMINI_API_KEY);
 
-export async function analyzeFoodImage(base64Image: string) {
+export async function analyzeFoodImage(imageBase64: string) {
   try {
+    // ใช้โมเดลตัวล่าสุด
     const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
-    
-    const prompt = `วิเคราะห์ภาพอาหารนี้และตอบเป็น JSON เท่านั้น:
-    {
-      "name": "ชื่ออาหาร",
-      "calories": 0,
-      "protein": 0,
-      "carbs": 0,
-      "fat": 0,
-      "comment": "คำแนะนำสั้นๆ จากเทรนเนอร์"
-    }`;
+
+    // คำสั่งภาษาไทยที่ถูกต้อง
+    const prompt = "วิเคราะห์ภาพอาหารนี้ บอกชื่อ แคลอรี่ และสารอาหาร เป็นภาษาไทยในรูปแบบ JSON";
 
     const result = await model.generateContent([
       prompt,
       {
         inlineData: {
-          data: base64Image.split(',')[1],
-          mimeType: "image/jpeg"
-        }
-      }
+          data: imageBase64.split(",")[1],
+          mimeType: "image/jpeg",
+        },
+      },
     ]);
 
     const response = await result.response;
-    const text = response.text();
-    return JSON.parse(text.replace(/```json|```/g, ""));
+    return response.text();
   } catch (error) {
-    console.error("Error analyzing food:", error);
+    console.error("Error:", error);
     throw error;
   }
 }
