@@ -171,38 +171,33 @@ export default function App() {
     localStorage.setItem('keecal_history', JSON.stringify(newHistory));
   };
 
-  const handleImageUpload = async (file: File) => {
-    if (!profile || !trainer) return;
-    setAnalyzing(true);
-    const reader = new FileReader();
-    reader.onloadend = async () => {
-      const base64 = (reader.result as string).split(',')[1];
-      const todayCalories = history
-        .filter(e => new Date(e.timestamp).toDateString() === new Date().toDateString())
-        .reduce((sum, e) => sum + e.calories, 0);
+ const handleImageUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+  const file = e.target.files?.[0];
+  if (!file) return;
 
-      try {
-        const result = await analyzeFoodImage(base64);
-        const result = JSON.parse(resultText); //
-        const newEntry: FoodEntry = {
-          id: Date.now().toString(),
-          timestamp: Date.now(),
-          imageUrl: reader.result as string,
-          name: result.name || 'Food',
-          calories: result.calories || 0,
-          nutrition: result.nutrition || { protein: 0, carbs: 0, fat: 0 },
-          trainerComment: result.trainerComment || '...',
-        };
-        handleAddEntry(newEntry);
-        setShowResult(newEntry);
-      } catch (err) {
-        alert("Analysis failed. Please try again.");
-      } finally {
-        setAnalyzing(false);
-      }
-    };
-    reader.readAsDataURL(file);
+  const reader = new FileReader();
+  reader.onload = async () => {
+    const base64 = reader.result as string;
+    try {
+      const aiData = await analyzeFoodImage(base64);
+      
+      const newEntry: FoodEntry = {
+        id: Date.now().toString(),
+        name: aiData.name,
+        calories: aiData.calories,
+        nutrition: aiData.nutrition,
+        trainerComment: aiData.trainerComment,
+        timestamp: new Date().toISOString(),
+        image: base64
+      };
+      
+      setEntries(prev => [newEntry, ...prev]);
+    } catch (error) {
+      alert("AI วิเคราะห์ไม่ได้ เช็ค API Key อีกทีครับ");
+    }
   };
+  reader.readAsDataURL(file);
+};
 
   const handleTrainerImageFile = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
