@@ -1,20 +1,22 @@
 import { GoogleGenerativeAI } from "@google/generative-ai";
 
-const genAI = new GoogleGenerativeAI(import.meta.env.VITE_GEMINI_API_KEY);
+// ใช้ชื่อ API_KEY ให้ตรงกับที่แม่ตั้งใน Vercel (รูป image_18e092)
+const genAI = new GoogleGenerativeAI(import.meta.env.VITE_API_KEY || "");
 
-export async function analyzeFoodImage(imageBase64: string) {
+export async function analyzeFoodImage(base64Image: string) {
   try {
     const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
-    const prompt = "วิเคราะห์ภาพอาหารนี้และตอบเป็น JSON ภาษาไทยเท่านั้น: { \"name\": \"ชื่ออาหาร\", \"calories\": 0, \"nutrition\": { \"protein\": 0, \"carbs\": 0, \"fat\": 0 }, \"trainerComment\": \"คำแนะนำ\" }";
+    const prompt = "วิเคราะห์ภาพอาหารนี้และตอบเป็น JSON ภาษาไทย: { \"name\": \"ชื่ออาหาร\", \"calories\": 0, \"nutrition\": { \"protein\": 0, \"carbs\": 0, \"fat\": 0 }, \"trainerComment\": \"คำแนะนำ\" }";
 
     const result = await model.generateContent([
       prompt,
-      { inlineData: { data: imageBase64, mimeType: "image/jpeg" } }
+      { inlineData: { data: base64Image, mimeType: "image/jpeg" } }
     ]);
 
-    return result.response.text();
+    const response = await result.response;
+    return JSON.parse(response.text());
   } catch (error) {
-    console.error(error);
-    throw new Error("AI Fail");
+    console.error("AI Error:", error);
+    throw error;
   }
 }
