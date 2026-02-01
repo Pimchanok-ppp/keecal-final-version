@@ -10,13 +10,12 @@ export const translations = {
     carbs: "คาร์บ",
     fat: "ไขมัน",
     trainer_comment: "ความเห็นเทรนเนอร์",
-    // ส่วนที่น่าจะขาดไป:
     setup_title: "ตั้งค่าโปรไฟล์",
     gender: "เพศ",
     age: "อายุ",
     weight: "น้ำหนัก (กก.)",
     height: "ส่วนสูง (ซม.)",
-    activity_level: "การออกกำลังกาย",
+    activity_level: "พฤติกรรมการออกกำลังกาย",
     goal: "เป้าหมาย",
     save_btn: "บันทึกข้อมูล",
     activity_options: {
