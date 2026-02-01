@@ -182,7 +182,8 @@ export default function App() {
         .reduce((sum, e) => sum + e.calories, 0);
 
       try {
-        const result = await analyzeFoodImage(base64, profile, trainer, todayCalories);
+        const result = await analyzeFoodImage(base64);
+        const result = JSON.parse(resultText); //
         const newEntry: FoodEntry = {
           id: Date.now().toString(),
           timestamp: Date.now(),
