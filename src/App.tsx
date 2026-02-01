@@ -181,22 +181,22 @@ export default function App() {
     try {
       const aiData = await analyzeFoodImage(base64);
       
-  // เปลี่ยนชื่อจาก result เป็น aiData เพื่อไม่ให้ซ้ำ
-const aiData = await analyzeFoodImage(base64);
-
-const newEntry: FoodEntry = {
-  id: Date.now().toString(),
-  name: aiData.name,
-  calories: aiData.calories,
-  nutrition: aiData.nutrition,
-  trainerComment: aiData.trainerComment,
-  timestamp: new Date().toISOString(),
-  image: base64
-};
+ try {
+      const aiData = await analyzeFoodImage(base64);
+      
+      const newEntry: FoodEntry = {
+        id: Date.now().toString(),
+        name: aiData.name,
+        calories: aiData.calories,
+        nutrition: aiData.nutrition,
+        trainerComment: aiData.trainerComment,
+        timestamp: new Date().toISOString(),
+        image: base64
+      };
       
       setEntries(prev => [newEntry, ...prev]);
     } catch (error) {
-      alert("AI วิเคราะห์ไม่ได้ เช็ค API Key อีกทีครับ");
+      console.error(error);
     }
   };
   reader.readAsDataURL(file);
