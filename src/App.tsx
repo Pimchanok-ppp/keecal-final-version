@@ -170,13 +170,14 @@ export default function App() {
     localStorage.setItem('keecal_history', JSON.stringify(newHistory));
   };
 
- const handleImageUpload = async (file: File) => {
+const handleImageUpload = async (file: File) => {
     setAnalyzing(true);
     const reader = new FileReader();
     reader.onload = async () => {
       const base64 = reader.result as string;
       try {
         const aiData = await analyzeFoodImage(base64);
+        
         const newEntry: FoodEntry = {
           id: Date.now().toString(),
           name: aiData.name,
@@ -184,8 +185,21 @@ export default function App() {
           nutrition: aiData.nutrition,
           trainerComment: aiData.trainerComment,
           timestamp: new Date().toISOString(),
-          image: base64
+          image: base64,
+          imageUrl: base64
         };
+        
+        handleAddEntry(newEntry);
+        setShowResult(newEntry);
+      } catch (error) {
+        console.error(error);
+        alert("Error: Please check your API Key and connection.");
+      } finally {
+        setAnalyzing(false);
+      }
+    };
+    reader.readAsDataURL(file);
+  };
         handleAddEntry(newEntry);
         setShowResult(newEntry);
       } catch (error) {
@@ -197,7 +211,6 @@ export default function App() {
     };
     reader.readAsDataURL(file);
   };
-
   const handleTrainerImageFile = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (file && trainer) {
