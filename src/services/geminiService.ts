@@ -6,13 +6,17 @@ const genAI = new GoogleGenerativeAI(apiKey);
 export async function analyzeFoodImage(imageBase64: string) {
   try {
     const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
-    const prompt = "วิเคราะห์ภาพอาหารและตอบเป็น JSON ภาษาไทย: { \"name\": \"ชื่อ\", \"calories\": 0, \"nutrition\": { \"protein\": 0, \"carbs\": 0, \"fat\": 0 }, \"trainerComment\": \"คำแนะนำ\" }";
+    
+    // คลีนข้อมูลรูปภาพ
+    const base64Data = imageBase64.includes(",") ? imageBase64.split(",")[1] : imageBase64;
+
+    const prompt = "วิเคราะห์ภาพอาหารและตอบเป็น JSON ภาษาไทยเท่านั้น: { \"name\": \"ชื่ออาหาร\", \"calories\": 0, \"nutrition\": { \"protein\": 0, \"carbs\": 0, \"fat\": 0 }, \"trainerComment\": \"คำแนะนำสั้นๆ\" }";
 
     const result = await model.generateContent([
       prompt,
       {
         inlineData: {
-          data: imageBase64.includes(",") ? imageBase64.split(",")[1] : imageBase64,
+          data: base64Data,
           mimeType: "image/jpeg",
         },
       },
@@ -23,7 +27,7 @@ export async function analyzeFoodImage(imageBase64: string) {
     const cleanText = text.replace(/```json|```/g, "").trim();
     return JSON.parse(cleanText);
   } catch (error) {
-    console.error(error);
+    console.error("Error in geminiService:", error);
     throw error;
   }
 }
