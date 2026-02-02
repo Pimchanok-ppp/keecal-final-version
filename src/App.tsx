@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { UserProfile, Trainer, FoodEntry, Personality, ActivityLevel, Goal, Gender, Language } from './types';
-import { analyzeFoodImage } from './services/geminiService';
+import { analyzeFoodImage } from './service/geminiService';
 import { Icons, COLORS } from './constants';
 import { translations } from './translations';
 
