@@ -1,88 +1,41 @@
-import { GoogleGenAI, Type } from "@google/genai";
-import { UserProfile, Trainer, FoodEntry } from "../types";
+import { GoogleGenerativeAI } from "@google/generative-ai";
 
-// ใช้ process.env.API_KEY ตามข้อกำหนดของระบบเพื่อความปลอดภัยและประสิทธิภาพ
-const ai = new GoogleGenAI({ apiKey: process.env.API_KEY });
+const apiKey = import.meta.env.VITE_API_KEY || "";
+const genAI = new GoogleGenerativeAI(apiKey);
 
-const getSystemPrompt = (profile: UserProfile, trainer: Trainer, currentDailyCalories: number, langText: string) => {
-  return `You are a professional fitness trainer named "${trainer.name}" with a "${trainer.personality}" personality.
-          
-          TASK: Analyze the food image provided and provide nutrition details in ${langText}.
-          
-          USER CONTEXT:
-          - User Goal: ${profile.goal}
-          - Daily Calorie Limit: ${profile.dailyLimit} kcal
-          - Calories consumed today: ${currentDailyCalories} kcal
-          
-          PERSONALITY GUIDELINES:
-          - "kind": Very gentle, uses emojis, encourages the user.
-          - "aggressive": Very strict, sounds like a drill instructor, demands discipline.
-          - "funny": Joking, uses humor, makes light of the situation.
-          
-          REQUIRED JSON OUTPUT:
-          {
-            "name": "Food Name",
-            "calories": number,
-            "protein": number,
-            "carbs": number,
-            "fat": number,
-            "trainerComment": "Feedback based on your personality and their progress."
-          }`;
-};
+export async function analyzeFoodImage(imageBase64: string) {
+  try {
+    const model = genAI.getGenerativeModel({ 
+      model: "gemini-1.5-flash",
+      generationConfig: {
+        responseMimeType: "application/json",
+      }
+    });
 
-const responseSchema = {
-  type: Type.OBJECT,
-  properties: {
-    name: { type: Type.STRING },
-    calories: { type: Type.NUMBER },
-    protein: { type: Type.NUMBER },
-    carbs: { type: Type.NUMBER },
-    fat: { type: Type.NUMBER },
-    trainerComment: { type: Type.STRING },
-  },
-  required: ["name", "calories", "protein", "carbs", "fat", "trainerComment"],
-};
+    const base64Data = imageBase64.includes(",") ? imageBase64.split(",")[1] : imageBase64;
 
-export const analyzeFoodImage = async (
-  base64Image: string,
-  profile: UserProfile,
-  trainer: Trainer,
-  currentDailyCalories: number
-): Promise<Partial<FoodEntry>> => {
-  const langText = profile.language === 'th' ? "Thai" : "English";
+    const prompt = `วิเคราะห์ภาพอาหารและตอบเป็น JSON ภาษาไทยเท่านั้น: 
+    {
+      "name": "ชื่ออาหาร",
+      "calories": 0,
+      "nutrition": { "protein": 0, "carbs": 0, "fat": 0 },
+      "trainerComment": "คำแนะนำสั้นๆ สไตล์เทรนเนอร์"
+    }`;
 
-  const response = await ai.models.generateContent({
-    model: "gemini-3-flash-preview",
-    contents: {
-      parts: [
-        {
-          inlineData: {
-            mimeType: "image/jpeg",
-            data: base64Image,
-          },
+    const result = await model.generateContent([
+      prompt,
+      {
+        inlineData: {
+          data: base64Data,
+          mimeType: "image/jpeg",
         },
-        {
-          text: getSystemPrompt(profile, trainer, currentDailyCalories, langText)
-        },
-      ],
-    },
-    config: {
-      responseMimeType: "application/json",
-      responseSchema: responseSchema,
-    },
-  });
+      },
+    ]);
 
-  const jsonStr = response.text?.trim() || "{}";
-  const result = JSON.parse(jsonStr);
-
-  return {
-    name: result.name,
-    calories: Math.round(result.calories),
-    nutrition: {
-      protein: Math.round(result.protein),
-      carbs: Math.round(result.carbs),
-      fat: Math.round(result.fat),
-    },
-    trainerComment: result.trainerComment,
-  };
-};
+    const response = await result.response;
+    return JSON.parse(response.text());
+  } catch (error) {
+    console.error("Gemini Error:", error);
+    throw error;
+  }
+}
